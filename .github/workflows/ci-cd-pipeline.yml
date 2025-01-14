@@ -42,3 +42,15 @@ jobs:
 
       - name: Run unit tests
         run: npm test
+      
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          curl -sS https://get.sonarsource.com/sonar-scanner-cli-linux.zip -o sonar-scanner.zip
+          unzip sonar-scanner.zip
+          ./sonar-scanner-*/bin/sonar-scanner \
+            -Dsonar.projectKey=agnervillafabrega-technical-test-we-imagine \
+            -Dsonar.sources=src \
+            -Dsonar.host.url=${{ secrets.SONAR_URL }} \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
