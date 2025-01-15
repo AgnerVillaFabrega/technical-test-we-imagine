@@ -48,19 +48,19 @@ jobs:
           CI: true
 
       # Paso 8: Configurar SonarQube Scanner y exportar resultados
-      # - name: Run SonarQube Scan
-      #   uses: SonarSource/sonarqube-scan-action@v4.1.0
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-      #   with:
-      #     args: >
-      #       -Dsonar.projectKey=agnervillafabrega-technical-test-we-imagine
-      #       -Dsonar.sources=step-1/src
-      #       -Dsonar.tests=step-1/test
-      #       -Dsonar.test.inclusions=step-1/src/**/*.spec.ts
-      #       -Dsonar.typescript.lcov.reportPaths=step-1/coverage/lcov.info
-      #       -Dsonar.verbose=true
+      - name: Run SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=agnervillafabrega-technical-test-we-imagine
+            -Dsonar.sources=step-1/src
+            -Dsonar.tests=step-1/test
+            -Dsonar.test.inclusions=step-1/src/**/*.spec.ts
+            -Dsonar.typescript.lcov.reportPaths=step-1/coverage/lcov.info
+            -Dsonar.verbose=true
 
       # Paso 9: Construir la imagen Docker
       - name: Build Docker image
