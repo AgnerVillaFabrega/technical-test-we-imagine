@@ -1,6 +1,10 @@
 name: CICD
 on:
   push:
+    paths:
+      - 'step-1/**'    # Cambios en el proyecto principal (CRUD de usuarios)
+      - 'k8/**'        # Cambios en los manifiestos de Kubernetes
+      - '.github/**'   # Cambios en los archivos de configuración del pipeline
     branches:
       - main
 
