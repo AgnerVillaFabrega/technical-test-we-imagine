@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ajvf-technical-test-service  # Nombre del Service
+spec:
+  selector:
+    app: ajvf-technical-test  # Este label debe coincidir con el label del Deployment
+  ports:
+    - protocol: TCP
+      port: 80           # Puerto que se expondrá públicamente
+      targetPort: 3000    # Puerto interno en el contenedor (debe coincidir con containerPort en el Deployment)
+  type: LoadBalancer  # Esto creará un LoadBalancer en AWS para acceder a la aplicación externamente

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: ajvf-technical-test-deployment  # Nombre del Deployment
 spec:
-  replicas: 2  # Número de réplicas del pod
+  replicas: 1  # Número de réplicas del pod
   selector:
     matchLabels:
       app: ajvf-technical-test  # Cambia el label de 'app' para coincidir con tu aplicación
@@ -16,4 +16,4 @@ spec:
       - name: ajvf-technical-test-container  # Nombre del contenedor
         image: agnervillafabrega/ajvf-technical-test:latest  # Imagen que usará el contenedor
         ports:
-        - containerPort: 80  # Puerto en el que escucha la app
+        - containerPort: 3000  # Puerto en el que escucha la app
