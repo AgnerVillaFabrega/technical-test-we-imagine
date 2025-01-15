@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '22.12.0'
           cache: 'yarn' # Cachea las dependencias de Yarn para mejorar tiempos
 
       # Paso 3: Instalar dependencias
