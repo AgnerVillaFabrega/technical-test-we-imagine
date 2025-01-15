@@ -16,9 +16,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '22.12.0'
-        #   cache: 'yarn'
-        # env:
-        #   YARN_LOCK_FILE: ./step-1/yarn.lock
 
       # Paso 3: Instalar dependencias
       - name: Install dependencies
@@ -58,8 +55,9 @@ jobs:
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
         with:
           args: >
+            -Dsonar.projectKey=agnervillafabrega-technical-test-we-imagine
             -Dsonar.sources=step-1/src
-            -Dsonar.tests=step-1/src
+            -Dsonar.tests=step-1/test
             -Dsonar.test.inclusions=step-1/src/**/*.spec.ts
             -Dsonar.typescript.lcov.reportPaths=step-1/coverage/lcov.info
             -Dsonar.verbose=true

@@ -38,10 +38,19 @@ services:
       - .:/usr/src
     networks:
       - sonarnet
-    entrypoint: ["bash", "-c", "sonar-scanner -Dsonar.projectKey=agnervillafabrega-technical-test-we-imagine -Dsonar.sources=src -Dsonar.host.url=https://sonarqube.imaginamos.com -Dsonar.login=sqp_f61ea613abc37cafa41a10c0a1b82855295984cb"]
+    entrypoint: [
+      "bash", 
+      "-c", 
+      "sleep 30 && sonar-scanner \
+        -Dsonar.projectKey=agnervillafabrega-technical-test-we-imagine \
+        -Dsonar.sources=step-1/src \
+        -Dsonar.tests=step-1/test \
+        -Dsonar.test.inclusions='step-1/**/*.spec.ts,**/*.spec.tsx' \
+        -Dsonar.javascript.lcov.reportPaths=step-1/coverage/lcov.info \
+        -Dsonar.host.url=http://sonarqube:9000 \
+        -Dsonar.login=sqa_1a95d0c9d82d72bee524734174cfe8a64c4dd929"
+    ]
 
-
-    
 networks:
   sonarnet:
   
