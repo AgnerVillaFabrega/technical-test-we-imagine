@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: ajvf-technical-test-deployment  # Nombre del Deployment
 spec:
-  replicas: 1
+  replicas: 2  # Número de réplicas del pod
   selector:
     matchLabels:
-      app: app
+      app: ajvf-technical-test  # Cambia el label de 'app' para coincidir con tu aplicación
   template:
     metadata:
       labels:
-        app: app
+        app: ajvf-technical-test  # Asegúrate de que el label sea el mismo que en el selector
     spec:
       containers:
-      - name: my-app-container
-        image: my-docker-repo/my-app:latest
+      - name: ajvf-technical-test-container  # Nombre del contenedor
+        image: agnervillafabrega/ajvf-technical-test:latest  # Imagen que usará el contenedor
         ports:
-        - containerPort: 80
+        - containerPort: 80  # Puerto en el que escucha la app

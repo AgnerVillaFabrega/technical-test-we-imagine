@@ -78,8 +78,11 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
         working-directory: ./step-1
 
-    #   # Paso 5: Deploy to EKS
-    #   - name: Deploy to EKS
-    #     run: |
-    #       aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ${{ vars.EKS_CLUSTER_NAME }}
-    #       kubectl set image deployment/app app=${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
+      # Paso 5: Deploy to EKS
+      - name: Deploy to EKS
+        run: |
+          aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ${{ vars.EKS_CLUSTER_NAME }}
+          kubectl set image deployment/${{ vars.EKS_DEPLOYMENT_NAME }} ${{ vars.EKS_CONTAINER_NAME }}=${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
+
+      - name: Check deployment status
+        run: kubectl rollout status deployment/${{ vars.EKS_DEPLOYMENT_NAME }}
