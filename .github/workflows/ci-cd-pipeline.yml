@@ -3,54 +3,74 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # O la rama que se desees usar
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
+      # Paso 1: Descargar el código del repositorio
       - name: Check out the code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js (o el lenguaje de tu elección)
-        uses: actions/setup-node@v2
+      # Paso 2: Configurar la versión de Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Cambiar la versión si es necesario
+          node-version: '16'
+          cache: 'yarn' # Cachea las dependencias de Yarn para mejorar tiempos
 
+      # Paso 3: Instalar dependencias
       - name: Install dependencies
-        run: npm install
+        run: yarn install --frozen-lockfile
 
+      # Paso 4: Compilar la aplicación
       - name: Build the application
-        run: npm run build
+        run: yarn build
 
-  test:
+      # Paso 5: Verificar la salida del build
+      - name: List build directory
+        run: ls -l dist
+
+  test-and-analyze:
     runs-on: ubuntu-latest
-    needs: build
-    
-    steps:
-      - name: Check out the code
-        uses: actions/checkout@v2
 
-      - name: Set up Node.js (o el lenguaje de tu elección)
-        uses: actions/setup-node@v2
+    steps:
+      # Paso 1: Clonar el repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Deshabilitar shallow clone para mejorar los reportes
+
+      # Paso 2: Configurar Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '16'
 
+      # Paso 3: Instalar dependencias
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
-      - name: Run unit tests
-        run: npm test
-      
-      - name: SonarQube Scan
+      # Paso 4: Ejecutar pruebas unitarias y generar reporte de cobertura
+      - name: Run tests
+        run: yarn test --coverage
+        env:
+          CI: true
+
+      # Paso 5: Configurar SonarQube Scanner
+      - name: Run SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          curl -sS https://get.sonarsource.com/sonar-scanner-cli-linux.zip -o sonar-scanner.zip
-          unzip sonar-scanner.zip
-          ./sonar-scanner-*/bin/sonar-scanner \
-            -Dsonar.projectKey=agnervillafabrega-technical-test-we-imagine \
-            -Dsonar.sources=src \
-            -Dsonar.host.url=https://sonarqube.imaginamos.com \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.sources=src
+            -Dsonar.tests=src
+            -Dsonar.test.inclusions=src/**/*.spec.ts
+            -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.verbose=true
+  
