@@ -16,9 +16,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '22.12.0'
-          cache: 'yarn'
-        env:
-          YARN_LOCK_FILE: ./step-1/yarn.lock
+        #   cache: 'yarn'
+        # env:
+        #   YARN_LOCK_FILE: ./step-1/yarn.lock
 
       # Paso 3: Instalar dependencias
       - name: Install dependencies
