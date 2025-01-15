@@ -1,10 +1,10 @@
-name: CICD
+name: PR Checks
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  ci:
+  pr:
     runs-on: ubuntu-latest
     steps:
       # Paso 1: Descargar el código del repositorio
@@ -79,3 +79,6 @@ jobs:
       - name: Push Docker image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
+    outputs:
+      image_tag: ${{ github.sha }}
+
