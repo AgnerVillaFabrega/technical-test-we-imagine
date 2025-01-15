@@ -1,0 +1,77 @@
+name: CICD
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      # Paso 1: Descargar el código del repositorio
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # Paso 2: Configurar la versión de Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+          cache: 'yarn' # Cachea las dependencias de Yarn para mejorar tiempos
+
+      # Paso 3: Instalar dependencias
+      - name: Install dependencies
+        run: |
+            yarn install --frozen-lockfile
+        working-directory: ./step-1
+
+      # Paso 4: Compilar la aplicación
+      - name: Build the application
+        run: yarn build
+        working-directory: ./step-1
+
+      # Paso 5: Verificar la salida del build
+      - name: List build directory
+        run: ls -l dist
+        working-directory: ./step-1
+      
+      # Paso 6: Ejecutar pruebas unitarias y generar reporte de cobertura
+      - name: Run tests
+        run: yarn test --coverage
+        working-directory: ./step-1
+        env:
+          CI: true
+
+      # Paso 7: Configurar SonarQube Scanner y exportar resultados
+      # - name: Run SonarQube Scan
+        # uses: SonarSource/sonarqube-scan-action@v4.1.0
+        # env:
+        #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        #   SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        # with:
+        #   args: >
+        #     -Dsonar.sources=src
+        #     -Dsonar.tests=src
+        #     -Dsonar.test.inclusions=src/**/*.spec.ts
+        #     -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
+        #     -Dsonar.verbose=true
+
+      # Paso 8: Construir la imagen Docker
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ github.sha }} .
+        working-directory: ./step-1
+
+      # Paso 9: Iniciar sesión en Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Paso 10: Subir la imagen al Docker Hub
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ github.sha }}
+    outputs:
+        image_tag: ${{ github.sha }}
+
