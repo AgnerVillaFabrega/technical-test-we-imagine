@@ -1,0 +1,85 @@
+name: CICD
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      # Paso 1: Descargar el código del repositorio
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # Paso 2: Configurar la versión de Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+
+      # Paso 3: Instalar dependencias
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+        working-directory: ./step-1
+
+      # Paso 4: Compilar la aplicación
+      - name: Build the application
+        run: yarn build
+        working-directory: ./step-1
+
+      # Paso 5: Verificar la salida del build
+      - name: List build directory
+        run: ls -l dist
+        working-directory: ./step-1
+
+      # Paso 6: Ejecutar pruebas unitarias
+      - name: Run unit tests
+        run: yarn test --coverage
+        working-directory: ./step-1
+        env:
+          CI: true
+
+      # Paso 7: Ejecutar pruebas E2E
+      - name: Run E2E tests
+        run: yarn test:e2e
+        working-directory: ./step-1/test
+        env:
+          CI: true
+
+  cd:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      # Paso 1: Check out the code
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # Paso 2: AWS authentication
+      - name: AWS authentication
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # Paso 3: Login in container registry DockerHub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Paso 4: Build and push Docker image to container registry
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
+        working-directory: ./step-1
+
+    #   # Paso 5: Deploy to EKS
+    #   - name: Deploy to EKS
+    #     run: |
+    #       aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ${{ vars.EKS_CLUSTER_NAME }}
+    #       kubectl set image deployment/app app=${{ secrets.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
