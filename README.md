@@ -5,7 +5,11 @@ Este repositorio contiene la solución a una prueba técnica de DevOps, diseñad
 ---
 
 ## **Contenido del Repositorio** 
+```
 
+```
+
+## **Requerimientos de la prueba**
 ### *Step-01*
 1. **Pipeline de CI/CD con GitHub Actions**  
    - **Build:** Compilación del código del servicio web.  
