@@ -31,7 +31,7 @@ La solución implementa un modelo hub-and-spoke donde:
 - El servidor central (EC2) actúa como hub
 - Los clusters EKS actúan como spokes
 - Cada cluster EKS envía datos a través de agentes de recolección
-![Diagrama de arquitectura](images/diagrama.png)
+![Diagrama de arquitectura](./images/Diagrama.png)
 
 ### 2. Componentes
 
