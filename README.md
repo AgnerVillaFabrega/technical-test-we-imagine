@@ -6,7 +6,67 @@ Este repositorio contiene la solución a una prueba técnica de DevOps, diseñad
 
 ## **Contenido del Repositorio** 
 ```
-
+Directory structure:
+└── agnervillafabrega-technical-test-we-imagine/
+    ├── README.md
+    ├── Local setup/
+    │   ├── eks/
+    │   │   └── cluster.yaml                  # Configuración del clúster EKS para pruebas locales.
+    │   ├── k8s/
+    │   │   ├── deployment.yaml               # Configuración del despliegue Kubernetes.
+    │   │   └── service.yaml                  # Configuración del servicio Kubernetes.
+    │   └── sonar-local/
+    │       └── docker-compose.yml            # Archivo para levantar SonarQube localmente.
+    ├── docs/
+    │   └── TerraformCommands.md              # Guía de comandos útiles de Terraform.
+    ├── step-1/
+    │   ├── README.md                         # Documentación del proyecto.
+    │   ├── Dockerfile                        # Imagen Docker para la aplicación.
+    │   ├── sonar-project.properties          # Configuración de SonarQube.en Git.
+    │   ├── ...
+    │   ├── src/
+    │   │   ├── app.controller.spec.ts        # Pruebas unitarias del controlador principal.
+    │   │   ├── app.controller.ts             # Controlador principal de la aplicación.
+    │   │   ├── app.module.ts                 # Módulo principal de la aplicación.
+    │   │   ├── app.service.ts                # Servicio principal de la aplicación.
+    │   │   ├── main.ts                       # Punto de entrada de la aplicación.
+    │   │   └── users/
+    │   │       ├── users.controller.spec.ts  # Pruebas del controlador de usuarios.
+    │   │       ├── users.controller.ts       # Controlador de usuarios.
+    │   │       ├── users.module.ts           # Módulo de usuarios.
+    │   │       ├── users.service.spec.ts     # Pruebas del servicio de usuarios.
+    │   │       ├── users.service.ts          # Servicio de usuarios.
+    │   │       ├── dto/
+    │   │       │   ├── create-user.dto.ts    # DTO para creación de usuario.
+    │   │       │   └── update-user.dto.ts    # DTO para actualización de usuario.
+    │   │       └── entities/
+    │   │           └── user.entity.ts        # Entidad de usuario.
+    │   └── test/
+    │       ├── app.e2e-spec.ts               # Pruebas end-to-end para la aplicación.
+    │       ├── jest-e2e.json                 # Configuración Jest para pruebas e2e.
+    │       └── users/
+    │           └── users.e2e-spec.ts         # Pruebas e2e para el módulo de usuarios.
+    ├── step-2/
+    │   ├── README.md                         # Documentación de la infraestructura con Terraform.
+    │   ├── databases.tf                      # Configuración de bases de datos.
+    │   ├── eks.tf                            # Configuración del clúster EKS.
+    │   ├── iam.tf                            # Configuración de roles IAM.
+    │   ├── main.tf                           # Configuración principal de Terraform.
+    │   ├── outputs.tf                        # Salidas de Terraform.
+    │   ├── security.tf                       # Configuración de seguridad (SGs).
+    │   ├── terraform.tfvars                  # Variables personalizadas.
+    │   ├── terraform.tfvars.example          # Ejemplo de variables.
+    │   ├── variables.tf                      # Variables reutilizables.
+    │   ├── version.tf                        # Versión de Terraform.
+    │   ├── vpc.tf                            # Configuración de la VPC.
+    │   └── .gitignore                        # Archivos ignorados por Git en Terraform.
+    ├── step-3/
+    │   ├── README-SOLUTION.md                # Descripción del monitoreo centralizado.
+    │   └── images/                           # Recursos gráficos para documentación.
+    └── .github/
+        └── workflows/
+            ├── cicd.yaml                     # Configuración del pipeline CI/CD.
+            └── pr.yaml                       # Pipeline para validación de PRs.
 ```
 
 ## **Requerimientos de la prueba**
