@@ -29,5 +29,5 @@ db_engine_version = "17.2"
 default_tags = {
   Environment = "dev"
   Terraform   = "true"
-  Project     = "my-project"
+  Project     = "tech-test-project"
 }

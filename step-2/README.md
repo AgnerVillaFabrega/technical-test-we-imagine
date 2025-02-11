@@ -213,13 +213,3 @@ terraform output
 # Ver un output específico
 terraform output vpc_id
 ```
-
-### Exportación de Outputs
-```bash
-# Exportar todos los outputs en formato JSON
-terraform output -json > outputs.json
-
-# Usar en scripts
-VPC_ID=$(terraform output -raw vpc_id)
-```
-
